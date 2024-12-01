@@ -1,95 +1,78 @@
+'use client'
 import Image from "next/image";
+import React from "react";
 import styles from "./page.module.css";
+import Link from 'next/link';
+import clp from "../public/left-panel-close.svg"
+import olp from "../public/left-panel-open.svg"
+
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isOpen, setIsOpen] = React.useState(true)
+  const [isSelected, setIsSelected] = React.useState(false)
+  const selectedRef = React.useRef();
+  const [innerText, setInnerText] = React.useState(<h4>Dashboard</h4>);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+  function closeNav() {
+    setIsOpen(perv => !perv)
+  }
+  function select(e) {
+    let temp = e.currentTarget.firstChild.innerText[5]
+    if (e.currentTarget.firstChild.innerText[5] === "1") { temp = "first" }
+    if (e.currentTarget.firstChild.innerText[5] === "2") { temp = "second" }
+    if (e.currentTarget.firstChild.innerText[5] === "3") { temp = "third" }
+    if (e.currentTarget.firstChild.innerText[5] === "4") { temp = "fourth" }
+    if (selectedRef.current) {
+      selectedRef.current.style.backgroundColor = "";
+      // setInnerText(<h4></h4>)
+    }
+    selectedRef.current = e.currentTarget;
+    e.currentTarget.style.backgroundColor = "rgba(42, 157, 144, 0.62)"
+    setInnerText(<Link href={`/${temp}/${e.currentTarget.firstChild.innerText}`}><h4>{e.currentTarget.firstChild.innerText}</h4></Link>)
+    setIsSelected(true)
+    // console.log(selectedRef.current.firstChild.innerText)
+    console.log(temp)
+  }
+
+
+  const navbarOpen = (
+    <div className={styles.navbar} >
+      <span className={styles.span}>
+        <Image src={clp} alt="close left panel" width={20} height={20} onClick={closeNav} />
+        <h4>Dashboard</h4>
+      </span>
+      <div><h4>First</h4>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-11</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-12</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-13</p></div>
+      </div>
+      <div><h4>Second</h4>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-21</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-22</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-23</p></div>
+      </div>
+      <div><h4>Third</h4>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-31</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-32</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-33</p></div>
+      </div>
+      <div><h4>Fourth</h4>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-41</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-42</p></div>
+        <div className={styles.item} onClick={(e) => select(e)}><p>item-43</p></div>
+      </div>
+    </div>
+  )
+
+
+  return (
+    <div className={styles.home} >
+      {isOpen ? navbarOpen : <div className={styles.navbarClose}><Image src={isOpen ? clp : olp} alt="close left panel" width={20} height={20} onClick={closeNav} /></div>}
+      <div className={styles.dashboard} style={isOpen ? { width: "78svw" } : { width: "90svw" }}>
+        <div className={styles.dashboardTop}><p>NEXTjs TEST</p></div>
+        {innerText}
+      </div>
     </div>
   );
 }
